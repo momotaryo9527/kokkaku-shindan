@@ -1,21 +1,14 @@
 import { useRef } from "react";
-import type { PhotoAngle } from "../types";
-import { PHOTO_ANGLE_LABELS } from "../types";
-
-const ANGLE_HINT: Record<PhotoAngle, string> = {
-  front: "腕を軽く広げ、体全体が写るように正面を向いて撮影してください",
-  side: "体の側面(横向き)全体が写るように撮影してください",
-  back: "背中側から体全体が写るように撮影してください",
-};
 
 interface Props {
-  angle: PhotoAngle;
+  label: string;
+  hint: string;
   imageUrl?: string;
   onChange: (dataUrl: string) => void;
   onClear: () => void;
 }
 
-export function PhotoSlotCard({ angle, imageUrl, onChange, onClear }: Props) {
+export function PhotoSlotCard({ label, hint, imageUrl, onChange, onClear }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   function handleFile(file: File | undefined) {
@@ -27,15 +20,13 @@ export function PhotoSlotCard({ angle, imageUrl, onChange, onClear }: Props) {
 
   return (
     <div className="flex flex-col items-center gap-3 rounded-2xl border border-violet-100 bg-white p-4 shadow-sm">
-      <div className="text-sm font-semibold text-violet-900">
-        {PHOTO_ANGLE_LABELS[angle]}の写真
-      </div>
+      <div className="text-sm font-semibold text-violet-900">{label}</div>
 
       <div className="flex h-56 w-40 items-center justify-center overflow-hidden rounded-xl bg-violet-50">
         {imageUrl ? (
-          <img src={imageUrl} alt={`${PHOTO_ANGLE_LABELS[angle]}の写真`} className="h-full w-full object-cover" />
+          <img src={imageUrl} alt={label} className="h-full w-full object-cover" />
         ) : (
-          <span className="px-3 text-center text-xs text-violet-300">{ANGLE_HINT[angle]}</span>
+          <span className="px-3 text-center text-xs text-violet-300">{hint}</span>
         )}
       </div>
 

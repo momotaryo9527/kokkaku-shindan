@@ -35,11 +35,21 @@ export interface PostureFinding {
 export interface DiagnosisResult {
   skeletalType: SkeletalType;
   skeletalScores: Record<SkeletalType, number>;
-  measurements: {
+  measurements?: {
     shoulderHipRatio: number;
     torsoLegRatio: number;
     shoulderTilt: number;
     hipTilt: number;
   };
   postureFindings: PostureFinding[];
+  postureChecked: boolean;
 }
+
+export type CheckPart = "collarbone" | "wrist" | "knee" | "ear";
+
+export const CHECK_PART_LABELS: Record<CheckPart, string> = {
+  collarbone: "鎖骨",
+  wrist: "手首",
+  knee: "膝",
+  ear: "耳",
+};

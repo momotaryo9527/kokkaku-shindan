@@ -56,7 +56,11 @@ export function ResultView({ result, onRestart }: Props) {
 
       <section className="rounded-2xl border border-violet-100 bg-white p-6 text-left shadow-sm">
         <h3 className="text-lg font-bold text-violet-900">姿勢チェック</h3>
-        {result.postureFindings.length === 0 ? (
+        {!result.postureChecked ? (
+          <p className="mt-2 text-sm text-gray-600">
+            自撮りクイック診断では姿勢はチェックしていません。姿勢もあわせて確認したい場合は詳細診断(全身3枚)をお試しください。
+          </p>
+        ) : result.postureFindings.length === 0 ? (
           <p className="mt-2 text-sm text-gray-600">目立った姿勢の歪みは検出されませんでした。</p>
         ) : (
           <div className="mt-3 space-y-2">

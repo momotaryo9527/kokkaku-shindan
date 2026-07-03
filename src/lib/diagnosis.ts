@@ -15,7 +15,7 @@ function mid(a: Point, b: Point): Point {
 }
 
 // Softmax-style normalization so the three scores read as a percentage breakdown.
-function normalizeScores(scores: Record<SkeletalType, number>): Record<SkeletalType, number> {
+export function normalizeScores(scores: Record<SkeletalType, number>): Record<SkeletalType, number> {
   const total = scores.straight + scores.wave + scores.natural;
   if (total <= 0) {
     return { straight: 33, wave: 33, natural: 34 };
@@ -25,6 +25,13 @@ function normalizeScores(scores: Record<SkeletalType, number>): Record<SkeletalT
     wave: Math.round((scores.wave / total) * 100),
     natural: Math.round((scores.natural / total) * 100),
   };
+}
+
+export function pickTopSkeletalType(scores: Record<SkeletalType, number>): SkeletalType {
+  return (Object.keys(scores) as SkeletalType[]).reduce(
+    (best, key) => (scores[key] > scores[best] ? key : best),
+    "straight" as SkeletalType,
+  );
 }
 
 function classifySkeletal(front: LandmarkSet): {
@@ -71,10 +78,7 @@ function classifySkeletal(front: LandmarkSet): {
   if (armTorsoRatio > 1.3) scores.natural += 2;
   else if (armTorsoRatio < 1.05) scores.wave += 1;
 
-  const type = (Object.keys(scores) as SkeletalType[]).reduce(
-    (best, key) => (scores[key] > scores[best] ? key : best),
-    "straight" as SkeletalType,
-  );
+  const type = pickTopSkeletalType(scores);
 
   return { type, scores: normalizeScores(scores), shoulderHipRatio, torsoLegRatio };
 }
@@ -199,5 +203,6 @@ export function runDiagnosis(landmarks: {
       hipTilt: back.hipTilt,
     },
     postureFindings: [...sideFindings, ...back.findings],
+    postureChecked: true,
   };
 }
